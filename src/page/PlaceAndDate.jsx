@@ -17,6 +17,9 @@ import {
   Text,
   Box,
   Button,
+  Skeleton,
+  Stack,
+  Icon,
 } from "@chakra-ui/react";
 import {
   collection,
@@ -26,6 +29,7 @@ import {
   orderBy,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig";
 import {
@@ -46,6 +50,12 @@ import {
   waT,
   wiawso,
 } from "../config/regionData";
+import { ArrowForwardIcon, CalendarIcon, DeleteIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
+
+
+
+
 const PlaceAndDate = () => {
   const [ticketData, setTicketData] = useState([]);
   const [ticketSearchData, setTicketSearchFormData] = useState({
@@ -60,6 +70,7 @@ const PlaceAndDate = () => {
       where("ticketFormData.departure", "==", ticketSearchData.departure),
       where("ticketFormData.destination", "==", ticketSearchData.destination),
       where("ticketFormData.date", "==", ticketSearchData.date),
+      where("isSave", "==", "save"),
       orderBy("timeStamp", "desc")
     );
 
@@ -88,8 +99,14 @@ const PlaceAndDate = () => {
   // }, [])
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "tickets", id));
-      setTicketData(ticketData.filter((item) => item.id != id));
+      // await deleteDoc(doc(db, "tickets", id));
+      // setTicketData(ticketData.filter((item) => item.id != id));
+      const updateTicket = doc(db, "tickets",id);
+    
+              const docRef = await updateDoc(updateTicket, {
+                isSave: "delete",
+                // timeStamp: serverTimestamp(),
+              });
     } catch (error) {
       console.log(error);
     }
@@ -110,12 +127,22 @@ const PlaceAndDate = () => {
         <Td>{data.ticketFormData.destination}</Td>
         <Td>{data.ticketFormData.timing}</Td>
         <Td>{data.ticketFormData.date}</Td>
+        <Td>{data.ticketFormData.luggage}</Td>
         <Td>{data.payment}</Td>
         <Td>
+            <Button colorScheme='green'>
+            <Link to={`/ticket/${data.autoID}`}>Edit</Link>
+            </Button>
+            
+          </Td>
+          <Td>
+          {/* <Button colorScheme="red">
+            <Link to={`/ticket/${data.autoID}`}>Edit</Link>
+            </Button> */}
           <Button onClick={() => handleDelete(data.id)} colorScheme="red">
-            Delete
-          </Button>
-        </Td>
+          <Icon as={DeleteIcon} />
+            </Button>
+          </Td>
       </Tr>
     );
   });
@@ -134,6 +161,8 @@ const PlaceAndDate = () => {
 
   return (
     <>
+
+    
       <Flex>
         <Center w="200px">
           <Select
@@ -202,7 +231,34 @@ const PlaceAndDate = () => {
         </Center>
       </Flex>
 
-      <TableContainer>
+
+      <Button
+        colorScheme="gray"
+        size="lg"
+        leftIcon={<ArrowForwardIcon />}
+        rightIcon={<CalendarIcon />}
+      >
+        Total Number of Ticket Booking is {ticketData.length}
+      </Button>
+
+      {
+        ticketData.length === 0 ? <><Text fontSize='3xl' as='b'>Please Make A To Display Ticket Data </Text> 
+        <Stack>
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+  <Skeleton height='20px' />
+    </Stack>
+        </> :
+        <TableContainer>
         <Table variant="simple" size="sm">
           <TableCaption>Imperial to metric conversion factors</TableCaption>
           <Thead>
@@ -217,12 +273,13 @@ const PlaceAndDate = () => {
               <Th>Destination</Th>
               <Th>Time Of Departure</Th>
               <Th>Traveling Date</Th>
+              <Th>Luggage</Th>
               <Th>Amount Payed</Th>
             </Tr>
           </Thead>
-          <Tbody>{allTicket}</Tbody>
+          <Tbody>{ allTicket}</Tbody>
         </Table>
-      </TableContainer>
+      </TableContainer>}
     </>
   );
 };

@@ -13,6 +13,10 @@ import {
   Flex,
   Center,
   Button,
+  Text,
+  Stack,
+  Skeleton,
+  Icon,
 } from "@chakra-ui/react";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -23,8 +27,14 @@ import {
   orderBy,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig";
+import { ArrowForwardIcon, CalendarIcon, DeleteIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
+
+
+
 
 const SearchById = () => {
   const [ticketData, setTicketData] = useState([]);
@@ -36,6 +46,7 @@ const SearchById = () => {
       collection(db, "tickets"),
       // where("userID", "==", currentUser.uid),
       where("autoID", "==", search),
+      where("isSave", "==", "save"),
       orderBy("timeStamp", "desc")
     );
 
@@ -61,8 +72,16 @@ const SearchById = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "tickets", id));
-      setTicketData(ticketData.filter((item) => item.id != id));
+      // await deleteDoc(doc(db, "tickets", id));
+      // setTicketData(ticketData.filter((item) => item.id != id));
+
+      
+const updateTicket = doc(db, "tickets",id);
+    
+              const docRef = await updateDoc(updateTicket, {
+                isSave: "delete",
+                // timeStamp: serverTimestamp(),
+              });
     } catch (error) {
       console.log(error);
     }
@@ -82,10 +101,22 @@ const SearchById = () => {
         <Td>{data.ticketFormData.destination}</Td>
         <Td>{data.ticketFormData.timing}</Td>
         <Td>{data.ticketFormData.date}</Td>
+        <Td>{data.ticketFormData.luggage}</Td>
         <Td>{data.payment}</Td>
-        <Td><Button onClick={() => handleDelete(data.id)} colorScheme="red">
-              Delete
-            </Button></Td>
+        <Td>
+            <Button colorScheme='green'>
+            <Link to={`/ticket/${data.autoID}`}>Edit</Link>
+            </Button>
+            
+          </Td>
+          <Td>
+          {/* <Button colorScheme="red">
+            <Link to={`/ticket/${data.autoID}`}>Edit</Link>
+            </Button> */}
+          <Button onClick={() => handleDelete(data.id)} colorScheme="red">
+          <Icon as={DeleteIcon} />
+            </Button>
+          </Td>
       </Tr>
     );
   });
@@ -100,15 +131,40 @@ const SearchById = () => {
     <>
       <Flex>
         <Center w="200px">
-          <Input placeholder="custom placeholder" onChange={handelChange} />
+          <Input placeholder="Search By Ticket Id" onChange={handelChange} />
         </Center>
 
         <Center w="200px">
           <Button onClick={getAllBookings}> Search </Button>
         </Center>
       </Flex>
+      <Button
+        colorScheme="gray"
+        size="lg"
+        leftIcon={<ArrowForwardIcon />}
+        rightIcon={<CalendarIcon />}
+      >
+        Total Number of Ticket Booking is {ticketData.length}
+      </Button>
 
-      <TableContainer>
+      {
+           ticketData.length === 0 ? <><Text fontSize='3xl' as='b'>Please Make A To  Display Ticket Data </Text> 
+           <Stack>
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+     <Skeleton height='20px' />
+       </Stack>
+           </> :
+        <TableContainer>
         <Table variant="simple" size="sm">
           <TableCaption>Imperial to metric conversion factors</TableCaption>
           <Thead>
@@ -123,12 +179,15 @@ const SearchById = () => {
               <Th>Destination</Th>
               <Th>Time Of Departure</Th>
               <Th>Traveling Date</Th>
+              <Th>Luggage</Th>
               <Th>Amount Payed</Th>
             </Tr>
           </Thead>
-          <Tbody>{allTicket}</Tbody>
+          <Tbody>{ allTicket}</Tbody>
         </Table>
       </TableContainer>
+      
+      }
     </>
   );
 };

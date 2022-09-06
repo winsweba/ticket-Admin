@@ -10,13 +10,6 @@ import {
   TableCaption,
   TableContainer,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
   Icon,
   Stack,
@@ -37,14 +30,15 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig";
 import { ArrowForwardIcon, CalendarIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const AllTicket = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const DeletedPage = () => {
+
+
   const [ticketData, setTicketData] = useState([]);
 
   const getAllBookings = () => {
-    const q = query(collection(db, "tickets"),where("isSave", "==", "save") ,orderBy("timeStamp", "desc"));
+    const q = query(collection(db, "tickets"),where("isSave", "==", "delete") ,orderBy("timeStamp", "desc"));
 
     const unsub = onSnapshot(
       q,
@@ -73,15 +67,30 @@ const AllTicket = () => {
   const handleDelete = async (id) => {
     try {
 
-      // await deleteDoc(doc(db, "tickets", id));
-      // setTicketData(ticketData.filter((item) => item.id != id));
+      await deleteDoc(doc(db, "tickets", id));
+      setTicketData(ticketData.filter((item) => item.id != id));
+
+      // const updateTicket = doc(db, "tickets",id);
+    
+      //         const docRef = await updateDoc(updateTicket, {
+      //           isSave: "delete",
+      //           timeStamp: serverTimestamp(),
+      //         });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const restoreDelete = async (id) => {
+    try {
+
 
       const updateTicket = doc(db, "tickets",id);
     
               const docRef = await updateDoc(updateTicket, {
-                isSave: "delete",
+                isSave: "save",
                 // timeStamp: serverTimestamp(),
               });
+              
     } catch (error) {
       console.log(error);
     }
@@ -89,7 +98,7 @@ const AllTicket = () => {
 
   const allTicket = ticketData.map((data) => {
     return (
-      <>
+      < >
         <Tr key={data.id}>
           <Td>{data.ticketFormData.firstName}</Td>
           <Td>{data.ticketFormData.lastName}</Td>
@@ -106,11 +115,10 @@ const AllTicket = () => {
           <Td>{data.ticketFormData.destination}</Td>
           <Td>{data.ticketFormData.timing}</Td>
           <Td>{data.ticketFormData.date}</Td>
-          <Td>{data.ticketFormData.luggage}</Td>
           <Td>{data.payment}</Td>
           <Td>
-            <Button colorScheme='green'>
-            <Link to={`/ticket/${data.autoID}`}>Edit</Link>
+            <Button onClick={() => restoreDelete(data.id)} colorScheme='green'>
+            Restore
             </Button>
             
           </Td>
@@ -119,7 +127,7 @@ const AllTicket = () => {
             <Link to={`/ticket/${data.autoID}`}>Edit</Link>
             </Button> */}
           <Button onClick={() => handleDelete(data.id)} colorScheme="red">
-          <Icon as={DeleteIcon} />
+          <Icon as={DeleteIcon} /> Delete
             </Button>
           </Td>
         </Tr>
@@ -169,18 +177,19 @@ const AllTicket = () => {
               <Th>Destination</Th>
               <Th>Time Of Departure</Th>
               <Th>Traveling Date</Th>
-              <Th>Luggage</Th>
               <Th>Amount Payed</Th>
             </Tr>
           </Thead>
-          <Tbody>{allTicket}</Tbody>
+          <Tbody>
+            {allTicket}
+            </Tbody>
         </Table>
       </TableContainer>}
     </>
   );
 };
 
-export default AllTicket;
+export default DeletedPage;
 
 // <Modal isOpen={isOpen} onClose={onClose}>
 //           <ModalOverlay />

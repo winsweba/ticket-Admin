@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 import { auth } from "../config/FirebaseConfig";
@@ -19,7 +19,7 @@ export function useAuth() {
 export function AuthProvider({children}) {
 
     const [currentUser, setCurrentUser] = useState()
-    // let navigate = useNavigate();
+    let navigate = useNavigate();
     const [loading, setLoading] = useState(true)
 
 
@@ -52,7 +52,7 @@ export function AuthProvider({children}) {
             // Signed in 
             const user = userCredential.user;
             // ...
-            // navigate("/")
+            navigate("/")
             // console.log(user)
           })
           .catch((error) => {
@@ -60,6 +60,7 @@ export function AuthProvider({children}) {
             const errorMessage = error.message;
             console.log(errorCode)
             console.log(errorMessage)
+            alert(errorCode, errorMessage)
             // ..
           });
         
@@ -69,7 +70,7 @@ export function AuthProvider({children}) {
 
     function logout() {
         signOut(auth)
-        // navigate("/register")
+        navigate("/login")
     }
 
     useEffect(() => {
