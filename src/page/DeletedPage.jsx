@@ -115,6 +115,7 @@ const DeletedPage = () => {
           <Td>{data.ticketFormData.destination}</Td>
           <Td>{data.ticketFormData.timing}</Td>
           <Td>{data.ticketFormData.date}</Td>
+          <Td>{data.ticketFormData.luggage}</Td>
           <Td>{data.payment}</Td>
           <Td>
             <Button onClick={() => restoreDelete(data.id)} colorScheme='green'>
@@ -177,6 +178,7 @@ const DeletedPage = () => {
               <Th>Destination</Th>
               <Th>Time Of Departure</Th>
               <Th>Traveling Date</Th>
+              <Th>Luggage</Th>
               <Th>Amount Payed</Th>
             </Tr>
           </Thead>

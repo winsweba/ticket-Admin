@@ -1,10 +1,15 @@
-import { Box, Button, Flex, FormLabel, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormLabel, Input, Text, } from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/color-mode";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 // import { Link, useNavigate } from "react-router-dom";
 
 
 const Registration = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+
   const [formData, setFormData] = useState({
     slideForm: "",
     email: "",
@@ -69,6 +74,20 @@ const Registration = () => {
 
 <Box p={5} mb={50} shadow='md' borderWidth='1px'>
            <Text fontSize='xl' p={20} as='b'>Admin Login</Text>
+
+           <Button
+      onClick={() => toggleColorMode()}
+      pos="absolute"
+      top="0"
+      right="0"
+      m="1rem"
+    >
+      {colorMode === "dark" ? (
+        <SunIcon color="orange.200" />
+      ) : (
+        <MoonIcon color="blue.700" />
+      )}
+    </Button>
      
          </Box>
 
