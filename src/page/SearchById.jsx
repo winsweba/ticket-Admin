@@ -33,9 +33,6 @@ import { db } from "../config/FirebaseConfig";
 import { ArrowForwardIcon, CalendarIcon, DeleteIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 
-
-
-
 const SearchById = () => {
   const [ticketData, setTicketData] = useState([]);
   const [search, setSearch] = useState("");
@@ -75,13 +72,12 @@ const SearchById = () => {
       // await deleteDoc(doc(db, "tickets", id));
       // setTicketData(ticketData.filter((item) => item.id != id));
 
-      
-const updateTicket = doc(db, "tickets",id);
-    
-              const docRef = await updateDoc(updateTicket, {
-                isSave: "delete",
-                // timeStamp: serverTimestamp(),
-              });
+      const updateTicket = doc(db, "tickets", id);
+
+      const docRef = await updateDoc(updateTicket, {
+        isSave: "delete",
+        // timeStamp: serverTimestamp(),
+      });
     } catch (error) {
       console.log(error);
     }
@@ -102,21 +98,20 @@ const updateTicket = doc(db, "tickets",id);
         <Td>{data.ticketFormData.timing}</Td>
         <Td>{data.ticketFormData.date}</Td>
         <Td>{data.ticketFormData.luggage}</Td>
+        <Td>{data.carNumber}</Td>
+        <Td>{data.seatNumber}</Td>
         <Td>{data.payment}</Td>
+        <Td>{data.transaction}</Td>
         <Td>
-            <Button colorScheme='green'>
+          <Button colorScheme="green">
             <Link to={`/ticket/${data.autoID}`}>Edit</Link>
-            </Button>
-            
-          </Td>
-          <Td>
-          {/* <Button colorScheme="red">
-            <Link to={`/ticket/${data.autoID}`}>Edit</Link>
-            </Button> */}
+          </Button>
+        </Td>
+        <Td>
           <Button onClick={() => handleDelete(data.id)} colorScheme="red">
-          <Icon as={DeleteIcon} />
-            </Button>
-          </Td>
+            <Icon as={DeleteIcon} />
+          </Button>
+        </Td>
       </Tr>
     );
   });
@@ -147,47 +142,53 @@ const updateTicket = doc(db, "tickets",id);
         Total Number of Ticket Booking is {ticketData.length}
       </Button>
 
-      {
-           ticketData.length === 0 ? <><Text fontSize='3xl' as='b'>Please Make A To  Display Ticket Data </Text> 
-           <Stack>
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-     <Skeleton height='20px' />
-       </Stack>
-           </> :
+      {ticketData.length === 0 ? (
+        <>
+          <Text fontSize="3xl" as="b">
+            Please Make A To Display Ticket Data{" "}
+          </Text>
+          <Stack>
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+            <Skeleton height="20px" />
+          </Stack>
+        </>
+      ) : (
         <TableContainer>
-        <Table variant="simple" size="sm">
-          <TableCaption>Imperial to metric conversion factors</TableCaption>
-          <Thead>
-            <Tr>
-              <Th>First Name</Th>
-              <Th>Last Name</Th>
-              <Th>Ticket ID</Th>
-              <Th>Phone Number</Th>
-              <Th>Ordering Date</Th>
-              <Th>Number Of Ticket Need</Th>
-              <Th>Departure</Th>
-              <Th>Destination</Th>
-              <Th>Time Of Departure</Th>
-              <Th>Traveling Date</Th>
-              <Th>Luggage</Th>
-              <Th>Amount Payed</Th>
-            </Tr>
-          </Thead>
-          <Tbody>{ allTicket}</Tbody>
-        </Table>
-      </TableContainer>
-      
-      }
+          <Table variant="simple" size="sm">
+            <TableCaption>Imperial to metric conversion factors</TableCaption>
+            <Thead>
+              <Tr>
+                <Th>First Name</Th>
+                <Th>Last Name</Th>
+                <Th>Ticket ID</Th>
+                <Th>Phone Number</Th>
+                <Th>Ordering Date</Th>
+                <Th>Number Of Ticket Need</Th>
+                <Th>Departure</Th>
+                <Th>Destination</Th>
+                <Th>Time Of Departure</Th>
+                <Th>Traveling Date</Th>
+                <Th>Luggage</Th>
+                <Th>Car No.</Th>
+                <Th>Seat No.</Th>
+                <Th>Amount Payed</Th>
+                <Th>Payed ID (TR)</Th>
+              </Tr>
+            </Thead>
+            <Tbody>{allTicket}</Tbody>
+          </Table>
+        </TableContainer>
+      )}
     </>
   );
 };

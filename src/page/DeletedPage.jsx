@@ -143,7 +143,7 @@ const DeletedPage = () => {
         leftIcon={<ArrowForwardIcon />}
         rightIcon={<CalendarIcon />}
       >
-        Total Number of Ticket Booking is {ticketData.length}
+        Total Number of Ticket Deleted is {ticketData.length}
       </Button>
       {
          ticketData.length === 0 ? <><Text fontSize='3xl' as='b'>No Ticket Available </Text> 

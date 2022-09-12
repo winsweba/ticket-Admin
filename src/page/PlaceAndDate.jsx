@@ -94,18 +94,12 @@ const PlaceAndDate = () => {
     };
   };
 
-  // useEffect(() => {
-  //   getAllBookings()
-  // }, [])
   const handleDelete = async (id) => {
     try {
-      // await deleteDoc(doc(db, "tickets", id));
-      // setTicketData(ticketData.filter((item) => item.id != id));
       const updateTicket = doc(db, "tickets",id);
     
               const docRef = await updateDoc(updateTicket, {
                 isSave: "delete",
-                // timeStamp: serverTimestamp(),
               });
     } catch (error) {
       console.log(error);
@@ -128,7 +122,10 @@ const PlaceAndDate = () => {
         <Td>{data.ticketFormData.timing}</Td>
         <Td>{data.ticketFormData.date}</Td>
         <Td>{data.ticketFormData.luggage}</Td>
-        <Td>{data.payment}</Td>
+        <Td>{data.carNumber}</Td>
+          <Td>{data.seatNumber}</Td>
+          <Td>{data.payment}</Td>
+          <Td>{data.transaction}</Td>
         <Td>
             <Button colorScheme='green'>
             <Link to={`/ticket/${data.autoID}`}>Edit</Link>
@@ -136,9 +133,6 @@ const PlaceAndDate = () => {
             
           </Td>
           <Td>
-          {/* <Button colorScheme="red">
-            <Link to={`/ticket/${data.autoID}`}>Edit</Link>
-            </Button> */}
           <Button onClick={() => handleDelete(data.id)} colorScheme="red">
           <Icon as={DeleteIcon} />
             </Button>
@@ -274,7 +268,10 @@ const PlaceAndDate = () => {
               <Th>Time Of Departure</Th>
               <Th>Traveling Date</Th>
               <Th>Luggage</Th>
+              <Th>Car No.</Th>
+              <Th>Seat No.</Th>
               <Th>Amount Payed</Th>
+              <Th>Payed ID (TR)</Th>
             </Tr>
           </Thead>
           <Tbody>{ allTicket}</Tbody>

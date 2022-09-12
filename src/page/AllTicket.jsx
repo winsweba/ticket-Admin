@@ -107,7 +107,10 @@ const AllTicket = () => {
           <Td>{data.ticketFormData.timing}</Td>
           <Td>{data.ticketFormData.date}</Td>
           <Td>{data.ticketFormData.luggage}</Td>
+          <Td>{data.carNumber}</Td>
+          <Td>{data.seatNumber}</Td>
           <Td>{data.payment}</Td>
+          <Td>{data.transaction}</Td>
           <Td>
             <Button colorScheme='green'>
             <Link to={`/ticket/${data.autoID}`}>Edit</Link>
@@ -170,7 +173,10 @@ const AllTicket = () => {
               <Th>Time Of Departure</Th>
               <Th>Traveling Date</Th>
               <Th>Luggage</Th>
+              <Th>Car No.</Th>
+              <Th>Seat No.</Th>
               <Th>Amount Payed</Th>
+              <Th>Payed ID (TR)</Th>
             </Tr>
           </Thead>
           <Tbody>{allTicket}</Tbody>
